@@ -36,8 +36,8 @@ export class AppComponent implements OnInit {
       label: "Personal",
     }
   ];
-  subject1 = new BehaviorSubject([]);
-  subject2 = new BehaviorSubject([]);
+  list1 = [];
+  list2 = [];
 
 
   ngOnInit() {
@@ -45,6 +45,34 @@ export class AppComponent implements OnInit {
   }
 
   onFilterSelected(filter: string, type: string) {
-    this.filteredList = this.surveyList;
+
+    console.log('type', type);
+    console.log('filter', filter);
+    if(type === 'status') {
+      this.list1 = this.surveyList.filter((x) => x.status === filter);
+    } else {
+      this.list2 = this.surveyList.filter((x) => x.category === filter);
+    }
+
+    // compare value 2 array
+    if(this.list2.length === 0) {
+      this.filteredList = this.list1;
+    } else {
+      const intersection = this.list1.filter(element => this.list2.includes(element));
+      this.filteredList = intersection;
+    }
+
+    // case All
+    if(filter === 'All') {
+      if(this.list2.length === 0) {
+        this.filteredList = this.surveyList;
+      } else {
+        const intersection = this.surveyList.filter(element => this.list2.includes(element));
+        this.filteredList = intersection;
+      }
+    }
+
+    console.log('list1', this.list1);
+    console.log('list2', this.list2);
   }
 }
